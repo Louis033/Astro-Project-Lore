@@ -1,0 +1,211 @@
+/* ===== Minimal Wiki Layout (UESP-ish, but modern) ===== */
+
+:root{
+  --bg: #f6f7f9;          /* page background */
+  --panel: #ffffff;       /* content background */
+  --text: #1f2328;        /* main text */
+  --muted: #5b6572;       /* muted text */
+  --border: #e6e8eb;      /* borders */
+  --link: #1f6feb;        /* links */
+  --link-hover: #0a58ca;
+
+  --maxw: 1100px;         /* content width */
+  --radius: 12px;
+  --shadow: 0 8px 22px rgba(0,0,0,.06);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin:0;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+}
+
+/* Links */
+a{ color: var(--link); text-decoration: none; }
+a:hover{ color: var(--link-hover); text-decoration: underline; }
+
+/* Page shell */
+.site{
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(246,247,249,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner{
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.nav{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+.nav a{
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.nav a:hover{
+  background: #eef2ff;
+  text-decoration: none;
+}
+
+/* Main layout: sidebar + content (UESP-ish) */
+.wrap{
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 18px auto;
+  padding: 0 16px 28px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px){
+  .wrap{ grid-template-columns: 1fr; }
+}
+
+/* Panels */
+.panel{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Sidebar */
+.sidebar{
+  padding: 14px;
+}
+.sidebar h3{
+  margin: 6px 0 10px;
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.sidebar a{
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text);
+}
+.sidebar a:hover{
+  background: #f1f5f9;
+  text-decoration: none;
+}
+
+/* Content area */
+.content{
+  padding: 18px 18px 22px;
+}
+.content h1{
+  margin: 6px 0 12px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+.content h2{
+  margin: 22px 0 10px;
+  font-size: 20px;
+  line-height: 1.25;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.content p{ margin: 10px 0; color: var(--text); }
+.small{ color: var(--muted); font-size: 14px; }
+
+/* UESP-ish list styles */
+.list{
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+.list li{
+  border: 1px solid var(--border);
+  background: #fbfcfe;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.list li a{
+  font-weight: 700;
+  display: inline-block;
+  margin-right: 8px;
+}
+.badge{
+  font-size: 12px;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  background: #ffffff;
+}
+
+/* Infobox (right side on detail pages) */
+.article{
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 900px){
+  .article{ grid-template-columns: 1fr; }
+}
+
+.infobox{
+  position: sticky;
+  top: 74px;
+  padding: 12px;
+}
+.infobox h3{
+  margin: 6px 0 10px;
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.infobox table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.infobox td{
+  padding: 8px 6px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+.infobox td:first-child{
+  color: var(--muted);
+  width: 40%;
+}
+
+/* Code-ish inline */
+code{
+  font-family: var(--mono);
+  font-size: .95em;
+  background: #f2f4f7;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}

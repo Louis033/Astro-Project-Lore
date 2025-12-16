@@ -1,0 +1,39 @@
+---
+const { title = "Lore Library" } = Astro.props;
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+
+  <body class="site">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">Lore Library</div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/characters">Characters</a>
+          <a href="/items">Items</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <aside class="panel sidebar">
+        <h3>Browse</h3>
+        <a href="/characters">Characters</a>
+        <a href="/items">Items</a>
+        <a href="/about">About</a>
+      </aside>
+
+      <section class="panel content">
+        <slot />
+      </section>
+    </main>
+  </body>
+</html>

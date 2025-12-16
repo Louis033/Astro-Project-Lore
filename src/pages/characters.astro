@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const characters = await getCollection("characters");
+---
+
+<BaseLayout title="Characters">
+  <h1>Daftar Karakter</h1>
+  <p class="small">Klik nama untuk membuka halaman karakter.</p>
+
+  <ul class="list">
+    {characters.map((c) => (
+      <li>
+        <a href={`/characters/${c.slug}`}>{c.data.name}</a>
+        <span class="badge">{c.data.role}</span>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

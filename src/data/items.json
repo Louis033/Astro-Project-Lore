@@ -1,0 +1,12 @@
+[
+  {
+    "id": "obsidian-seal",
+    "name": "Obsidian Seal",
+    "type": "Artifact",
+    "rarity": "Rare",
+    "origin": "Undercity",
+    "description": "Segel hitam yang menyerap panas dan cahaya. Dipakai untuk menutup kontrak yang tidak boleh dibaca ulang.",
+    "effects": "Menyamarkan jejak mana dan menyegel dokumen/ruang kecil selama 7 hari.",
+    "notes": "Konon segel ini dibuat dari sisa pecahan batu yang jatuh saat Era Retak."
+  }
+]

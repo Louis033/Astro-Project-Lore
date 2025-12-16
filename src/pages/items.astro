@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const items = await getCollection("items");
+---
+
+<BaseLayout title="Items">
+  <h1>Daftar Item</h1>
+  <p class="small">Klik nama untuk membuka halaman item.</p>
+
+  <ul class="list">
+    {items.map((entry) => (
+      <li>
+        <a href={`/items/${entry.slug}`}>{entry.data.name}</a>
+        <span class="badge">{entry.data.type}</span>
+        <span class="badge">{entry.data.rarity}</span>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

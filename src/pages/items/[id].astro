@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const items = await getCollection("items");
+
+  return items.map((entry) => ({
+    params: { id: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+const rendered = await entry.render();
+const Content = rendered.Content;
+---
+
+<BaseLayout title={entry.data.name}>
+  <a href="/items" class="small">← Kembali</a>
+
+  <div class="article">
+    <div>
+      <h1>{entry.data.name}</h1>
+      <p class="small">
+        <span class="badge">{entry.data.type}</span>
+        <span class="badge">{entry.data.rarity}</span>
+      </p>
+
+      <Content />
+    </div>
+
+    <aside class="panel infobox">
+      <h3>Info</h3>
+      <table>
+        <tr><td>Tipe</td><td>{entry.data.type}</td></tr>
+        <tr><td>Rarity</td><td>{entry.data.rarity}</td></tr>
+        <tr><td>Asal</td><td>{entry.data.origin ?? "-"}</td></tr>
+      </table>
+    </aside>
+  </div>
+</BaseLayout>

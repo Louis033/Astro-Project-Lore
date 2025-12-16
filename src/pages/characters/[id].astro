@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const characters = await getCollection("characters");
+
+  return characters.map((entry) => ({
+    params: { id: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+// render markdown -> component
+const rendered = await entry.render();
+const Content = rendered.Content;
+---
+
+<BaseLayout title={entry.data.name}>
+  <a href="/characters" class="small">← Kembali</a>
+
+  <div class="article">
+    <div>
+      <h1>{entry.data.name}</h1>
+
+      {entry.data.title ? <p><i>{entry.data.title}</i></p> : null}
+
+      <Content />
+    </div>
+
+    <aside class="panel infobox">
+      <h3>Profil</h3>
+      <table>
+        <tr><td>Peran</td><td>{entry.data.role}</td></tr>
+        <tr><td>Afiliasi</td><td>{entry.data.affiliation ?? "-"}</td></tr>
+      </table>
+    </aside>
+  </div>
+</BaseLayout>
