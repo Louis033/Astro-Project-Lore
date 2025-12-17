@@ -4,40 +4,48 @@ import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const items = await getCollection("items");
-
-  return items.map((entry) => ({
-    params: { id: entry.slug },
-    props: { entry },
+  return items.map((it) => ({
+    params: { id: it.slug },
+    props: { item: it },
   }));
 }
 
-const { entry } = Astro.props;
+const { item } = Astro.props;
+const { Content } = await item.render();
 
-const rendered = await entry.render();
-const Content = rendered.Content;
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path}`;
 ---
 
-<BaseLayout title={entry.data.name}>
-  <a href="/items" class="small">← Kembali</a>
+<BaseLayout title={item.data.name}>
+  <a class="small" href={withBase("items")}>← Kembali</a>
 
   <div class="article">
-    <div>
-      <h1>{entry.data.name}</h1>
-      <p class="small">
-        <span class="badge">{entry.data.type}</span>
-        <span class="badge">{entry.data.rarity}</span>
-      </p>
+    <h1>{item.data.name}</h1>
+    {item.data.type && <p><i>{item.data.type}</i></p>}
 
-      <Content />
-    </div>
+    <Content />
 
-    <aside class="panel infobox">
+    <aside class="panel">
       <h3>Info</h3>
       <table>
-        <tr><td>Tipe</td><td>{entry.data.type}</td></tr>
-        <tr><td>Rarity</td><td>{entry.data.rarity}</td></tr>
-        <tr><td>Asal</td><td>{entry.data.origin ?? "-"}</td></tr>
+        <tbody>
+          <tr><td>Tipe</td><td>{item.data.type ?? "-"}</td></tr>
+          <tr><td>Rarity</td><td>{item.data.rarity ?? "-"}</td></tr>
+        </tbody>
       </table>
     </aside>
   </div>
 </BaseLayout>
+
+<style>
+  .small{ opacity:.7; text-decoration:none; }
+  .article{ max-width: 760px; }
+  .panel{
+    margin-top: 24px;
+    padding: 14px 16px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+  }
+  table td{ padding: 6px 10px 6px 0; vertical-align: top; }
+</style>

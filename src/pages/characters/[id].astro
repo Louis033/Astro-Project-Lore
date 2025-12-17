@@ -4,38 +4,48 @@ import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const characters = await getCollection("characters");
-
-  return characters.map((entry) => ({
-    params: { id: entry.slug },
-    props: { entry },
+  return characters.map((c) => ({
+    params: { id: c.slug },
+    props: { character: c },
   }));
 }
 
-const { entry } = Astro.props;
+const { character } = Astro.props;
+const { Content } = await character.render();
 
-// render markdown -> component
-const rendered = await entry.render();
-const Content = rendered.Content;
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path}`;
 ---
 
-<BaseLayout title={entry.data.name}>
-  <a href="/characters" class="small">← Kembali</a>
+<BaseLayout title={character.data.name}>
+  <a class="small" href={withBase("characters")}>← Kembali</a>
 
   <div class="article">
-    <div>
-      <h1>{entry.data.name}</h1>
+    <h1>{character.data.name}</h1>
+    {character.data.title && <p><i>{character.data.title}</i></p>}
 
-      {entry.data.title ? <p><i>{entry.data.title}</i></p> : null}
+    <Content />
 
-      <Content />
-    </div>
-
-    <aside class="panel infobox">
+    <aside class="panel">
       <h3>Profil</h3>
       <table>
-        <tr><td>Peran</td><td>{entry.data.role}</td></tr>
-        <tr><td>Afiliasi</td><td>{entry.data.affiliation ?? "-"}</td></tr>
+        <tbody>
+          <tr><td>Peran</td><td>{character.data.role ?? "-"}</td></tr>
+          <tr><td>Afiliasi</td><td>{character.data.affiliation ?? "-"}</td></tr>
+        </tbody>
       </table>
     </aside>
   </div>
 </BaseLayout>
+
+<style>
+  .small{ opacity:.7; text-decoration:none; }
+  .article{ max-width: 760px; }
+  .panel{
+    margin-top: 24px;
+    padding: 14px 16px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+  }
+  table td{ padding: 6px 10px 6px 0; vertical-align: top; }
+</style>

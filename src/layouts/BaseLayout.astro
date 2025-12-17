@@ -1,6 +1,11 @@
 ---
-const { title = "Lore Library" } = Astro.props;
 import "../styles/global.css";
+
+const { title = "Aerthos Lore Library" } = Astro.props;
+
+// penting: BASE_URL otomatis jadi "/" pas dev, dan "/Astro-Project-Lore/" pas GitHub Pages
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path}`; // path tanpa leading slash, contoh: "characters"
 ---
 
 <!doctype html>
@@ -10,30 +15,55 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
   </head>
-
-  <body class="site">
-    <header class="topbar">
-      <div class="topbar-inner">
-        <div class="brand">Lore Library</div>
-        <nav class="nav">
-          <a href="/">Home</a>
-          <a href="/characters">Characters</a>
-          <a href="/items">Items</a>
-        </nav>
-      </div>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="nav__link" href={withBase("")}>Home</a>
+        <a class="nav__link" href={withBase("characters")}>Characters</a>
+        <a class="nav__link" href={withBase("items")}>Items</a>
+      </nav>
     </header>
 
-    <main class="wrap">
-      <aside class="panel sidebar">
-        <h3>Browse</h3>
-        <a href="/characters">Characters</a>
-        <a href="/items">Items</a>
-        <a href="/about">About</a>
-      </aside>
-
-      <section class="panel content">
-        <slot />
-      </section>
+    <main class="container">
+      <slot />
     </main>
+
+    <footer class="footer container">
+      <small>Built with Astro • Aerthos / Aesleth Codex</small>
+    </footer>
   </body>
 </html>
+
+<style>
+  .site-header{
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #eee;
+    z-index: 10;
+  }
+  .nav{
+    display:flex;
+    justify-content:center;
+    gap: 28px;
+    padding: 14px 12px;
+  }
+  .nav__link{
+    text-decoration:none;
+    color:#111;
+  }
+  .nav__link:hover{
+    text-decoration: underline;
+  }
+  .container{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 28px 16px;
+  }
+  .footer{
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+    padding-bottom: 28px;
+    opacity: 0.7;
+  }
+</style>
