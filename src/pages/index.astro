@@ -1,20 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const base = import.meta.env.BASE_URL;
-const withBase = (path) => `${base}${path}`;
 ---
 
 <BaseLayout title="Aerthos Lore Library">
   <h1>Aerthos Lore Library</h1>
-  <p>Perpustakaan lore pribadi. Minimal, rapi, dan enak dibaca.</p>
+  <p class="small">Perpustakaan lore pribadi. Minimal, rapi, dan enak dibaca.</p>
 
   <ul>
-    <li><a href={withBase("characters")}>Characters</a> <span class="small">Browse</span></li>
-    <li><a href={withBase("items")}>Items</a> <span class="small">Browse</span></li>
+    <li>
+      <a href={import.meta.env.BASE_URL + "characters/"}>Characters</a> — Browse
+    </li>
+    <li>
+      <a href={import.meta.env.BASE_URL + "items/"}>Items</a> — Browse
+    </li>
   </ul>
-
-  <style>
-    .small{ opacity:.7; margin-left:6px; }
-  </style>
 </BaseLayout>

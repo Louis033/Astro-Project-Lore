@@ -1,51 +1,20 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-export async function getStaticPaths() {
-  const characters = await getCollection("characters");
-  return characters.map((c) => ({
-    params: { id: c.slug },
-    props: { character: c },
-  }));
-}
-
-const { character } = Astro.props;
-const { Content } = await character.render();
-
-const base = import.meta.env.BASE_URL;
-const withBase = (path) => `${base}${path}`;
+const characters = await getCollection("characters");
 ---
 
-<BaseLayout title={character.data.name}>
-  <a class="small" href={withBase("characters")}>← Kembali</a>
+<BaseLayout title="Characters">
+  <h1>Characters</h1>
+  <p class="small">Klik nama untuk membuka halaman karakter.</p>
 
-  <div class="article">
-    <h1>{character.data.name}</h1>
-    {character.data.title && <p><i>{character.data.title}</i></p>}
-
-    <Content />
-
-    <aside class="panel">
-      <h3>Profil</h3>
-      <table>
-        <tbody>
-          <tr><td>Peran</td><td>{character.data.role ?? "-"}</td></tr>
-          <tr><td>Afiliasi</td><td>{character.data.affiliation ?? "-"}</td></tr>
-        </tbody>
-      </table>
-    </aside>
-  </div>
+  <ul class="list">
+    {characters.map((c) => (
+      <li>
+        <a href={import.meta.env.BASE_URL + `characters/${c.slug}/`}>{c.data.name}</a>
+        {c.data.role && <span class="badge">{c.data.role}</span>}
+      </li>
+    ))}
+  </ul>
 </BaseLayout>
-
-<style>
-  .small{ opacity:.7; text-decoration:none; }
-  .article{ max-width: 760px; }
-  .panel{
-    margin-top: 24px;
-    padding: 14px 16px;
-    border: 1px solid #eee;
-    border-radius: 12px;
-  }
-  table td{ padding: 6px 10px 6px 0; vertical-align: top; }
-</style>
