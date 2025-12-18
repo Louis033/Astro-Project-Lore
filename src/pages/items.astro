@@ -15,7 +15,7 @@ const withBase = (path) => `${base}${path}`;
   <ul class="list">
     {items.map((it) => (
       <li>
-        <a href={withBase(`items/${it.slug}`)}>{it.data.name}</a>
+        <a href={withBase(`items/${it.slug}/`)}>{it.data.name}</a>
         {it.data.rarity && <span class="badge">{it.data.rarity}</span>}
       </li>
     ))}

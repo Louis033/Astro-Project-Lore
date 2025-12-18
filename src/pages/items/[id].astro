@@ -2,19 +2,49 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const items = await getCollection("items");
+export async function getStaticPaths() {
+  const items = await getCollection("items");
+  return items.map((entry) => ({
+    params: { id: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path.replace(/^\/+/, "")}`;
+
+const { name, rarity, image } = entry.data;
 ---
 
-<BaseLayout title="Items">
-  <h1>Items</h1>
-  <p class="small">Klik nama untuk membuka halaman item.</p>
+<BaseLayout title={name}>
+  <p><a href={withBase("items/")}>← Back to Items</a></p>
 
-  <ul class="list">
-    {items.map((it) => (
-      <li>
-        <a href={import.meta.env.BASE_URL + `items/${it.slug}/`}>{it.data.name}</a>
-        {it.data.rarity && <span class="badge">{it.data.rarity}</span>}
-      </li>
-    ))}
-  </ul>
+  <h1>{name}</h1>
+  {rarity && <p class="small"><b>Rarity:</b> {rarity}</p>}
+
+  {image && (
+    <img class="hero" src={withBase(image)} alt={name} loading="lazy" />
+  )}
+
+  <article class="content">
+    <Content />
+  </article>
 </BaseLayout>
+
+<style>
+  .small { opacity: .75; }
+  .hero{
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    margin: 14px 0 18px;
+    display: block;
+  }
+  .content :global(h2){ margin-top: 22px; }
+  .content :global(p){ line-height: 1.8; }
+</style>

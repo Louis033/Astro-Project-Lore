@@ -1,20 +1,61 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const characters = await getCollection("characters");
+export async function getStaticPaths() {
+  const characters = await getCollection("characters");
+  return characters.map((entry) => ({
+    params: { id: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path.replace(/^\/+/, "")}`;
+
+const { name, title, role, affiliation, image } = entry.data;
 ---
 
-<BaseLayout title="Characters">
-  <h1>Characters</h1>
-  <p class="small">Klik nama untuk membuka halaman karakter.</p>
+<BaseLayout title={name}>
+  <p><a href={withBase("characters/")}>← Back to Characters</a></p>
 
-  <ul class="list">
-    {characters.map((c) => (
-      <li>
-        <a href={import.meta.env.BASE_URL + `characters/${c.slug}/`}>{c.data.name}</a>
-        {c.data.role && <span class="badge">{c.data.role}</span>}
-      </li>
-    ))}
-  </ul>
+  <h1>{name}</h1>
+
+  <p class="meta">
+    {title && <span><b>Title:</b> {title}</span>}
+    {role && <span><b>Role:</b> {role}</span>}
+    {affiliation && <span><b>Affiliation:</b> {affiliation}</span>}
+  </p>
+
+  {image && (
+    <img class="hero" src={withBase(image)} alt={name} loading="lazy" />
+  )}
+
+  <article class="content">
+    <Content />
+  </article>
 </BaseLayout>
+
+<style>
+  .meta{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    opacity: .8;
+    margin-bottom: 12px;
+  }
+  .hero{
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    margin: 14px 0 18px;
+    display: block;
+  }
+  .content :global(h2){ margin-top: 22px; }
+  .content :global(p){ line-height: 1.8; }
+</style>

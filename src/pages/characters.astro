@@ -15,7 +15,7 @@ const withBase = (path) => `${base}${path}`;
   <ul class="list">
     {characters.map((c) => (
       <li>
-        <a href={withBase(`characters/${c.slug}`)}>{c.data.name}</a>
+        <a href={withBase(`characters/${c.slug}/`)}>{c.data.name}</a>
         {c.data.role && <span class="badge">{c.data.role}</span>}
       </li>
     ))}

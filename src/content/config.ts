@@ -4,9 +4,12 @@ const characters = defineCollection({
   type: "content",
   schema: z.object({
     name: z.string(),
-    role: z.string(),
     title: z.string().optional(),
+    role: z.string().optional(),
     affiliation: z.string().optional(),
+
+    // ✅ tambahin ini
+    image: z.string().optional(),
   }),
 });
 
@@ -14,9 +17,10 @@ const items = defineCollection({
   type: "content",
   schema: z.object({
     name: z.string(),
-    type: z.string(),
-    rarity: z.string(),
-    origin: z.string().optional(),
+    rarity: z.string().optional(),
+
+    // (kalau nanti item juga mau pakai image)
+    image: z.string().optional(),
   }),
 });
 
