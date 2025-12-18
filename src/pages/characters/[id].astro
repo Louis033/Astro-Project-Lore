@@ -3,59 +3,67 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const characters = await getCollection("characters");
-  return characters.map((entry) => ({
+  const entries = await getCollection("characters");
+  return entries.map((entry) => ({
     params: { id: entry.slug },
     props: { entry },
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
 
+// Base URL aman untuk GitHub Pages
 const base = import.meta.env.BASE_URL;
-const withBase = (path) => `${base}${path.replace(/^\/+/, "")}`;
+const withBase = (path) => `${base}${path}`;
 
-const { name, title, role, affiliation, image } = entry.data;
+// ambil image path dari frontmatter (optional)
+const rawImage = entry.data.image ?? "";
+const imagePath = rawImage.startsWith("/") ? rawImage.slice(1) : rawImage; // buang "/" kalau ada
+const imageSrc = imagePath ? withBase(imagePath) : "";
 ---
 
-<BaseLayout title={name}>
-  <p><a href={withBase("characters/")}>← Back to Characters</a></p>
+<BaseLayout title={entry.data.name}>
+  <a href={withBase("characters/")} style="display:inline-block; margin-bottom:16px;">← Back to Characters</a>
 
-  <h1>{name}</h1>
+  <h1>{entry.data.name}</h1>
 
   <p class="meta">
-    {title && <span><b>Title:</b> {title}</span>}
-    {role && <span><b>Role:</b> {role}</span>}
-    {affiliation && <span><b>Affiliation:</b> {affiliation}</span>}
+    {entry.data.title && <> <strong>Title:</strong> {entry.data.title} </>}
+    {entry.data.role && <> &nbsp; • &nbsp; <strong>Role:</strong> {entry.data.role} </>}
+    {entry.data.affiliation && <> &nbsp; • &nbsp; <strong>Affiliation:</strong> {entry.data.affiliation} </>}
   </p>
 
-  {image && (
-    <img class="hero" src={withBase(image)} alt={name} loading="lazy" />
+  {imageSrc && (
+    <img
+      src={imageSrc}
+      alt={entry.data.name}
+      loading="lazy"
+      decoding="async"
+      class="heroimg"
+    />
   )}
 
   <article class="content">
-    <Content />
+    <slot />
+  </article>
+
+  {/* kalau markdown kamu perlu dirender sebagai content, pakai ini: */}
+  <article class="content">
+    {entry.render().then((r) => r.Content)}
   </article>
 </BaseLayout>
 
 <style>
-  .meta{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 18px;
-    opacity: .8;
-    margin-bottom: 12px;
-  }
-  .hero{
-    max-width: 420px;
+  .meta { opacity: .8; margin-bottom: 14px; }
+  .heroimg{
     width: 100%;
-    height: auto;
-    border-radius: 14px;
+    max-width: 520px;
+    border-radius: 12px;
     border: 1px solid #eee;
-    margin: 14px 0 18px;
     display: block;
+    margin: 10px 0 18px;
   }
-  .content :global(h2){ margin-top: 22px; }
-  .content :global(p){ line-height: 1.8; }
+  .content{
+    line-height: 1.8;
+  }
 </style>
