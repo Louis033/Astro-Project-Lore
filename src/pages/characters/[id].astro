@@ -16,67 +16,123 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 const base = import.meta.env.BASE_URL;
-const withBase = (path) => `${base}${path}`;
+const withBase = (path) => `${base}${String(path || "").replace(/^\/+/, "")}`;
 
-// image di frontmatter: "images/characters/elias.png"
-const imageSrc = entry.data.image ? withBase(entry.data.image) : null;
+// image bisa "images/..." atau "/images/..."
+const rawImage = entry.data.image ?? "";
+const cleanImage = rawImage ? String(rawImage).replace(/^\/+/, "") : "";
+const imageSrc = cleanImage ? withBase(cleanImage) : "";
 ---
 
 <BaseLayout title={entry.data.name ?? "Character"}>
   <a class="back" href={withBase("characters/")}>← Back to Characters</a>
 
-  <h1>{entry.data.name}</h1>
+  <section class="page-layout">
+    {/* LEFT: lore/content */}
+    <article class="main">
+      <h1 class="page-title">{entry.data.name}</h1>
 
-  <div class="meta">
-    {entry.data.title && <span><b>Title:</b> {entry.data.title}</span>}
-    {entry.data.role && <span><b>Role:</b> {entry.data.role}</span>}
-    {entry.data.affiliation && <span><b>Affiliation:</b> {entry.data.affiliation}</span>}
-  </div>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
 
-  {imageSrc && (
-    <figure class="portrait">
-      <img
-        src={imageSrc}
-        alt={entry.data.name}
-        width="220"
-        height="220"
-        loading="lazy"
-        decoding="async"
-      />
-    </figure>
-  )}
+    {/* RIGHT: image + meta (image di atas, meta di bawah) */}
+    <aside class="side">
+      {imageSrc && (
+        <img
+          class="portrait"
+          src={imageSrc}
+          alt={entry.data.name}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
 
-  <article class="prose">
-    <Content />
-  </article>
+      <div class="card">
+        {entry.data.title && <p class="muted italic">{entry.data.title}</p>}
+
+        <div class="meta">
+          {entry.data.role && (
+            <p><b>Role:</b> {entry.data.role}</p>
+          )}
+          {entry.data.affiliation && (
+            <p><b>Affiliation:</b> {entry.data.affiliation}</p>
+          )}
+        </div>
+      </div>
+    </aside>
+  </section>
 </BaseLayout>
 
 <style>
   .back{
     display:inline-block;
-    margin: 6px 0 18px;
-    text-decoration:none;
+    margin-bottom: 16px;
+    text-decoration: none;
+    opacity: .8;
   }
-  .meta{
-    display:flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-    opacity: .9;
+  .back:hover{ text-decoration: underline; }
+
+  .page-layout{
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
   }
+
+  .page-title{
+    margin-top: 0;
+  }
+
+  .side{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 72px;
+  }
+
   .portrait{
-    margin: 10px 0 18px;
-  }
-  .portrait img{
-    width: 220px;         /* kunci biar ga “pecah” karena kebesaran */
-    height: 220px;
-    object-fit: cover;
+    width: 100%;
+    max-width: 320px;
     border-radius: 14px;
     border: 1px solid #eee;
     background: #fafafa;
-    display:block;
+    display: block;
+    object-fit: cover;
   }
-  .prose :global(h2){
-    margin-top: 28px;
+
+  .card{
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #fff;
+  }
+
+  .muted{ opacity: .75; margin: 0 0 10px; }
+  .italic{ font-style: italic; }
+
+  .meta p{
+    margin: 8px 0;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .prose :global(p){ line-height: 1.8; }
+  .prose :global(h2){ margin-top: 26px; }
+
+  @media (max-width: 900px){
+    .page-layout{
+      grid-template-columns: 1fr;
+    }
+    .side{
+      position: static;
+      top: auto;
+      order: -1; /* sidebar pindah ke atas di mobile */
+    }
+    .portrait{
+      max-width: 100%;
+    }
   }
 </style>

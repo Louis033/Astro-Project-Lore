@@ -2,9 +2,11 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
-  const items = await getCollection("items");
-  return items.map((entry) => ({
+  const entries = await getCollection("items");
+  return entries.map((entry) => ({
     params: { id: entry.slug },
     props: { entry },
   }));
@@ -14,37 +16,121 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 const base = import.meta.env.BASE_URL;
-const withBase = (path) => `${base}${path.replace(/^\/+/, "")}`;
+const withBase = (path) => `${base}${String(path || "").replace(/^\/+/, "")}`;
 
-const { name, rarity, image } = entry.data;
+// image bisa "images/..." atau "/images/..."
+const rawImage = entry.data.image ?? "";
+const cleanImage = rawImage ? String(rawImage).replace(/^\/+/, "") : "";
+const imageSrc = cleanImage ? withBase(cleanImage) : "";
 ---
 
-<BaseLayout title={name}>
-  <p><a href={withBase("items/")}>← Back to Items</a></p>
+<BaseLayout title={entry.data.name ?? "Item"}>
+  <a class="back" href={withBase("items/")}>← Back to Items</a>
 
-  <h1>{name}</h1>
-  {rarity && <p class="small"><b>Rarity:</b> {rarity}</p>}
+  <section class="page-layout">
+    {/* LEFT: lore/content */}
+    <article class="main">
+      <h1 class="page-title">{entry.data.name}</h1>
 
-  {image && (
-    <img class="hero" src={withBase(image)} alt={name} loading="lazy" />
-  )}
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
 
-  <article class="content">
-    <Content />
-  </article>
+    {/* RIGHT: image + meta */}
+    <aside class="side">
+      {imageSrc && (
+        <img
+          class="portrait"
+          src={imageSrc}
+          alt={entry.data.name}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+
+      <div class="card">
+        <div class="meta">
+          {entry.data.rarity && (
+            <p><b>Rarity:</b> {entry.data.rarity}</p>
+          )}
+          {entry.data.type && (
+            <p><b>Type:</b> {entry.data.type}</p>
+          )}
+          {entry.data.origin && (
+            <p><b>Origin:</b> {entry.data.origin}</p>
+          )}
+        </div>
+      </div>
+    </aside>
+  </section>
 </BaseLayout>
 
 <style>
-  .small { opacity: .75; }
-  .hero{
-    max-width: 420px;
+  .back{
+    display:inline-block;
+    margin-bottom: 16px;
+    text-decoration: none;
+    opacity: .8;
+  }
+  .back:hover{ text-decoration: underline; }
+
+  .page-layout{
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .page-title{
+    margin-top: 0;
+  }
+
+  .side{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 72px;
+  }
+
+  .portrait{
     width: 100%;
-    height: auto;
+    max-width: 320px;
     border-radius: 14px;
     border: 1px solid #eee;
-    margin: 14px 0 18px;
+    background: #fafafa;
     display: block;
+    object-fit: cover;
   }
-  .content :global(h2){ margin-top: 22px; }
-  .content :global(p){ line-height: 1.8; }
+
+  .card{
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #fff;
+  }
+
+  .meta p{
+    margin: 8px 0;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .prose :global(p){ line-height: 1.8; }
+  .prose :global(h2){ margin-top: 26px; }
+
+  @media (max-width: 900px){
+    .page-layout{
+      grid-template-columns: 1fr;
+    }
+    .side{
+      position: static;
+      top: auto;
+      order: -1;
+    }
+    .portrait{
+      max-width: 100%;
+    }
+  }
 </style>
