@@ -80,3 +80,24 @@ body {
   font-size: 14px;
   opacity: 0.7;
 }
+
+/* Quote tepat di bawah judul (dalam konten markdown) */
+.page-title + .prose blockquote,
+.prose > blockquote:first-child {
+  font-size: 1.6rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.7;
+
+  margin: 1rem 0 2rem;
+  padding-left: 1.25rem;
+
+  border-left: 4px solid #aaa;
+  color: #222;
+}
+
+/* rapihin paragraf dalam blockquote */
+.prose blockquote p {
+  margin: 0;
+}
+

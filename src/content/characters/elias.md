@@ -6,7 +6,7 @@ affiliation: None
 image : "images/characters/elias.png"
 ---
 
-Elias adalah pengelana yang lebih memilih menjadi saksi daripada pelaku.
+>"Live like shit is better than die honorably"
 
-## Latar Belakang
-Ia tumbuh di wilayah perbatasan dan hidup tanpa ikatan.
+## Background
+
