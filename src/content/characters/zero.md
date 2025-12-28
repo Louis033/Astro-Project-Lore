@@ -6,8 +6,8 @@ affiliation: Undercity(?)
 image : "images/characters/zero.png"
 ---
 
-><h>"Worse thing in life always comes free to us, 
->so we must paid the price to have better life"</h>
+>"Worse thing in life always comes free to us, 
+>so we must paid the price to have better future"
 
 ## Background
 
@@ -19,7 +19,7 @@ He was found as a very young child—able to stand and speak, yet unable to reca
 
 Because he seemed like a blank slate—an existence that started from nothing—the people of the Undercity called him Zero.
 
-He was taken in by a man named Rick, a laborer who raised him as his own. Rick became Zero’s father figure, teaching him how to survive the Undercity and offering him something rare in that place: kindness without expectation. To this day, Rick remains the closest thing Zero has to a family.
+He was taken in by a man named [Elias], a laborer who raised him as his own. [Elias] became Zero’s father figure, teaching him how to survive the Undercity and offering him something rare in that place: kindness without expectation. To this day, [Elias] remains the closest thing Zero has to a family.
 
 Zero’s remarkable aptitude surfaced early. Numbers came naturally to him, and his memory was unnervingly precise. These traits eventually drew the attention of the Undercity’s Warden, who recruited Zero into his service—not as punishment, but as an asset.
 
@@ -28,5 +28,13 @@ Despite his position, Zero despises the Undercity. He dreams of escaping to the 
 Once, Zero was allowed to visit the city above. There, he witnessed a vastly different way of life—clean streets, abundance, and freedom. That brief glimpse hardened his resolve. He swore he would return someday, not as a visitor, but as a free man.
 
 However, escape is impossible. The people of the Undercity are bound by an invisible seal, treated as living assets of the Warden, forced to work until their value is exhausted. The only way to break the seal is to kill the Warden himself.
+
+
+[Elias]: ../elias/
+
+
+
+
+
 
 
