@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+// base path aman untuk GitHub Pages
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path}`;
+
+// ambil semua markdown character
+const characterFiles = await Astro.glob("./*.md");
+
+// map data yang kita butuhkan
+const characters = characterFiles.map((file) => {
+  const slug = file.file.split("/").pop().replace(".md", "");
+  return {
+    slug,
+    name: file.frontmatter.name ?? slug,
+  };
+});
+
+// kelompokkan berdasarkan alfabet
+const grouped = {};
+
+for (const char of characters) {
+  const letter = char.name[0].toUpperCase();
+
+  if (!grouped[letter]) {
+    grouped[letter] = [];
+  }
+
+  grouped[letter].push(char);
+}
+
+// urutkan huruf A–Z
+const sortedLetters = Object.keys(grouped).sort();
+
+// urutkan nama di dalam tiap huruf
+for (const letter of sortedLetters) {
+  grouped[letter].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+}
+---
+
+<BaseLayout title="Characters">
+  <h1>Characters</h1>
+
+  <p>
+    A catalog of known individuals recorded within the Aesleth Codex.
+  </p>
+
+  {sortedLetters.map((letter) => (
+    <section>
+      <h2>{letter}</h2>
+      <ul>
+        {grouped[letter].map((char) => (
+          <li>
+            <a href={withBase(`characters/${char.slug}/`)}>
+              {char.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>
