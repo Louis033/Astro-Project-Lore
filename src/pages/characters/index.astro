@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path) => `${base}${path}`;
+
+// ambil semua entries dari collection "characters"
+const entries = await getCollection("characters");
+
+// map ke data sederhana
+const characters = entries.map((entry) => ({
+  slug: entry.slug,
+  name: entry.data.name ?? entry.slug,
+}));
+
+// kelompokkan A-Z
+const grouped = {};
+for (const char of characters) {
+  const letter = (char.name?.[0] ?? "#").toUpperCase();
+  (grouped[letter] ??= []).push(char);
+}
+
+const sortedLetters = Object.keys(grouped).sort();
+
+for (const letter of sortedLetters) {
+  grouped[letter].sort((a, b) => a.name.localeCompare(b.name));
+}
+---
+
+<BaseLayout title="Characters">
+  <h1>Characters</h1>
+
+  <p>A catalog of known individuals recorded within the Aesleth Codex.</p>
+
+  {sortedLetters.map((letter) => (
+    <section>
+      <h2>{letter}</h2>
+      <ul>
+        {grouped[letter].map((char) => (
+          <li>
+            <a href={withBase(`characters/${char.slug}/`)}>{char.name}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>
