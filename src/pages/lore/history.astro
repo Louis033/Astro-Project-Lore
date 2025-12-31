@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const historyEntries = await getCollection("history");
+---
+
+<BaseLayout title="History | Aesleth Codex">
+  <article class="lore-page">
+    <h1>History of Aesleth</h1>
+
+    <p class="intro">
+      A chronicle of blood, faith, and forgotten truths.
+    </p>
+
+    <ul class="history-list">
+      {historyEntries.map(entry => (
+        <li>
+          <a href={`${import.meta.env.BASE_URL}lore/history/${entry.slug}/`}>
+            <h3>{entry.data.title}</h3>
+            <p>{entry.data.summary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </article>
+</BaseLayout>

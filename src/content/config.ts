@@ -24,7 +24,17 @@ const items = defineCollection({
   }),
 });
 
+const history = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    era: z.string(),
+  }),
+});
+
 export const collections = {
   characters,
   items,
+  history,
 };
