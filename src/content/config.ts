@@ -33,8 +33,33 @@ const history = defineCollection({
   }),
 });
 
+const places = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    region: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+const books = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    author: z.string().optional(),
+    category: z.enum(["History", "Bestiary", "Botany", "Magic", "Religion", "Politics", "Fiction", "Other"]).optional(),
+    era: z.string().optional(),
+    region: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
 export const collections = {
   characters,
   items,
   history,
+  places,
+  books,
 };

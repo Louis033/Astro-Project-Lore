@@ -1,0 +1,28 @@
+---
+import Layout from "../../../layouts/BaseLayout.astro";
+import { getCollection, getEntryBySlug } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("places");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const entry = await getEntryBySlug("places", slug);
+if (!entry) {
+  throw new Error(`Place not found: ${slug}`);
+}
+
+const { Content } = await entry.render();
+---
+
+<Layout title={`${entry.data.title} | Places`}>
+  <article class="lore-page">
+    {entry.data.region && <p class="meta">{entry.data.region}</p>}
+    <h1>{entry.data.title}</h1>
+    <Content />
+  </article>
+</Layout>

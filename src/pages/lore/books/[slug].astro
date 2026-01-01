@@ -1,0 +1,43 @@
+---
+import Layout from "../../../layouts/BaseLayout.astro";
+import { getCollection, getEntryBySlug } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("books");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug("books", slug as string);
+
+if (!entry) throw new Error(`Book not found: ${slug}`);
+
+const { Content } = await entry.render();
+---
+
+<Layout title={`${entry.data.title} | Books`}>
+  <article class="lore-page">
+    <p class="meta">
+      {entry.data.author ? `By ${entry.data.author}` : "Unknown author"}
+      {entry.data.category ? ` • ${entry.data.category}` : ""}
+      {entry.data.era ? ` • ${entry.data.era}` : ""}
+    </p>
+
+    <h1>{entry.data.title}</h1>
+    <Content />
+
+    {entry.data.tags?.length && (
+      <div class="tags">
+        {entry.data.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    )}
+  </article>
+</Layout>
+
+<style>
+.meta { opacity: 0.75; font-style: italic; margin-bottom: 0.75rem; }
+.tags { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tag { border: 1px solid rgba(200,180,120,0.5); padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.85rem; opacity: 0.9; }
+</style>

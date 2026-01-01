@@ -1,0 +1,27 @@
+
+---
+import Layout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const bookEntries = await getCollection("books");
+---
+
+<Layout title="Books | Aesleth Codex">
+  <article class="lore-page">
+    <h1>Books</h1>
+    <p class="intro">
+      Archives, manuals, forbidden scriptures—ink that survives longer than kingdoms.
+    </p>
+
+    <ul class="history-list">
+      {bookEntries.map((entry) => (
+        <li>
+          <a href={`${import.meta.env.BASE_URL}lore/books/${entry.slug}/`}>
+            <h3>{entry.data.title}</h3>
+            <p>{entry.data.summary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </article>
+</Layout>
