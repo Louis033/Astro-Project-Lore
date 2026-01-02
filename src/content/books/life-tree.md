@@ -3,7 +3,7 @@ title: Life Tree
 summary: A collective knowledge about the existence of Life Tree
 author: Richard Godwin
 category: Compendium
-era: Austin Dominion
+era: Austin Dominion Era
 tags: ["Mystery", "Mana", "life tree"]
 ---
 

@@ -115,32 +115,72 @@ body {
   margin-bottom: 2rem;
 }
 
-.history-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+.right-float-img {
+  float: right;
+  margin: 0 0 1rem 1rem; /* jarak teks */
+  max-width: 360px;
 }
 
-.history-list li {
-  margin-bottom: 1.5rem;
-  padding-left: 1rem;
-  border-left: 3px solid rgba(200, 180, 120, 0.5);
+.right-float-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
 }
 
-.history-list a {
-  text-decoration: none;
-  color: inherit;
+@media (max-width: 768px) {
+  .right-float-img {
+    float: none;
+    max-width: 100%;
+    margin: 0 0 1rem 0;
+  }
+}
+
+.lore-split {
+  position: relative;
   display: block;
 }
 
-.history-list h3 {
-  margin: 0 0 0.25rem 0;
-  font-weight: 600;
+/* kolom teks: kasih ruang kanan sebesar lebar gambar + gap */
+.lore-text {
+  padding-right: 460px; /* 420 (gambar) + 40 (gap) */
 }
 
-.history-list p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.85;
+/* gambar nempel kanan, tidak ngedorong layout */
+.lore-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 420px;
 }
 
+/* gambar + border/box */
+.lore-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Supaya kontainer punya tinggi (karena gambar absolute) */
+.lore-split::after {
+  content: "";
+  display: block;
+  clear: both;
+  padding-bottom: 12px;
+}
+
+/* Mobile: balik normal */
+@media (max-width: 900px) {
+  .lore-text {
+    padding-right: 0;
+  }
+  .lore-image {
+    position: static;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}

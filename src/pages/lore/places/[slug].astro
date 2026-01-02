@@ -1,28 +1,156 @@
 ---
-import Layout from "../../../layouts/BaseLayout.astro";
-import { getCollection, getEntryBySlug } from "astro:content";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro"; // kalau path layout kamu beda, sesuaikan
 
 export async function getStaticPaths() {
   const entries = await getCollection("places");
   return entries.map((entry) => ({
     params: { slug: entry.slug },
+    props: { entry },
   }));
 }
 
-const { slug } = Astro.params;
-
-const entry = await getEntryBySlug("places", slug);
-if (!entry) {
-  throw new Error(`Place not found: ${slug}`);
-}
-
+const { entry } = Astro.props;
 const { Content } = await entry.render();
+
+// ====== DATA ======
+const placeTitle = entry.data.title ?? entry.slug;
+const summary = entry.data.summary ?? "";
+const region = entry.data.region ?? "";
+const tags = entry.data.tags ?? [];
+
+// ====== IMAGE (public/ assets + base path safe) ======
+// image boleh ditulis "images/..." atau "/images/..."
+const rawImage = entry.data.image ?? "";
+const cleanImage = rawImage ? String(rawImage).replace(/^\/+/, "") : "";
+
+// fallback otomatis: berdasarkan slug
+const fallbackImage = `images/places/${entry.slug}.png`;
+
+const base = import.meta.env.BASE_URL; // contoh: "/Astro-Project-Lore/"
+const imagePath = (cleanImage || fallbackImage).replace(/^\/+/, "");
+const imageSrc = `${base}${imagePath}`;
 ---
 
-<Layout title={`${entry.data.title} | Places`}>
-  <article class="lore-page">
-    {entry.data.region && <p class="meta">{entry.data.region}</p>}
-    <h1>{entry.data.title}</h1>
-    <Content />
-  </article>
-</Layout>
+<BaseLayout title={placeTitle}>
+  <a class="back" href={`${import.meta.env.BASE_URL}lore/places/`}>← Back to Places</a>
+
+  <section class="page-layout">
+    {/* LEFT: content */}
+    <article class="main">
+      {region && <p class="kicker">{region}</p>}
+      <h1 class="page-title">{placeTitle}</h1>
+      {summary && <p class="summary">{summary}</p>}
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+
+    {/* RIGHT: image + meta */}
+    <aside class="side">
+      <img
+        class="portrait"
+        src={imageSrc}
+        alt={placeTitle}
+        loading="lazy"
+        decoding="async"
+      />
+
+      <div class="card">
+        <p class="muted italic">Place Info</p>
+
+        <div class="meta">
+          {region && <p><b>Region:</b> {region}</p>}
+          {tags?.length ? <p><b>Tags:</b> {tags.join(", ")}</p> : null}
+        </div>
+      </div>
+    </aside>
+  </section>
+</BaseLayout>
+
+<style>
+  .back{
+    display:inline-block;
+    margin-bottom: 16px;
+    text-decoration: none;
+    opacity: .8;
+  }
+  .back:hover{ text-decoration: underline; }
+
+  /* Layout: sama vibes-nya seperti character */
+  .page-layout{
+    display: grid;
+    grid-template-columns: 1fr 420px; /* sidebar lebih lebar untuk places */
+    gap: 32px;
+    align-items: start;
+  }
+
+  .kicker{
+    margin: 0 0 6px;
+    opacity: .75;
+  }
+
+  .page-title{
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .summary{
+    margin: 0 0 18px;
+    opacity: .9;
+  }
+
+  .side{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 72px;
+  }
+
+  /* Gambar: gede, jelas, rapi */
+  .portrait{
+    width: 100%;
+    max-width: 420px;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    background: #fafafa;
+    display: block;
+    object-fit: cover;
+  }
+
+  .card{
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #fff;
+  }
+
+  .muted{ opacity: .75; margin: 0 0 10px; }
+  .italic{ font-style: italic; }
+
+  .meta p{
+    margin: 8px 0;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  /* "Elias vibe": typography untuk markdown */
+  .prose :global(p){ line-height: 1.8; }
+  .prose :global(h2){ margin-top: 26px; }
+
+  @media (max-width: 900px){
+    .page-layout{
+      grid-template-columns: 1fr;
+    }
+    .side{
+      position: static;
+      top: auto;
+      order: -1; /* sidebar pindah ke atas di mobile */
+    }
+    .portrait{
+      max-width: 100%;
+    }
+  }
+</style>

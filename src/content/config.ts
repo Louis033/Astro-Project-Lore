@@ -13,26 +13,6 @@ const characters = defineCollection({
   }),
 });
 
-const items = defineCollection({
-  type: "content",
-  schema: z.object({
-    name: z.string(),
-    rarity: z.string().optional(),
-
-    // (kalau nanti item juga mau pakai image)
-    image: z.string().optional(),
-  }),
-});
-
-const history = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    era: z.string(),
-  }),
-});
-
 const places = defineCollection({
   type: "content",
   schema: z.object({
@@ -49,7 +29,7 @@ const books = defineCollection({
     title: z.string(),
     summary: z.string(),
     author: z.string().optional(),
-    category: z.enum(["History", "Bestiary", "Botany", "Magic", "Religion", "Politics", "Fiction", "Compendium", "Other"]).optional(),
+    category: z.enum(["History", "Bestiary", "Botany", "Magic", "Religion", "Politics", "Fiction", "Compendium", "item", "Other"]).optional(),
     era: z.string().optional(),
     region: z.string().optional(),
     tags: z.array(z.string()).optional(),
@@ -58,8 +38,6 @@ const books = defineCollection({
 
 export const collections = {
   characters,
-  items,
-  history,
   places,
   books,
 };
