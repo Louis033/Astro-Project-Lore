@@ -1,186 +1,191 @@
-/* ===== Reset ringan ===== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* ======================================================
+   Aesleth Codex – Global Theme
+   Silver background + Life Tree watermark
+   (DEV & GitHub Pages SAFE)
+====================================================== */
+
+/* -----------------------
+   CSS Variables
+----------------------- */
+:root {
+  --bg-silver: #eef1f4;
+  --text-main: #1f2328;
+
+  /* Life Tree */
+  --tree-opacity: 0.04;
+  --tree-size: 100vw;
+  --tree-pos-y: 58%;
+
+  /* URL fallback (DEV + PROD) */
+  --lifetree-url: 
+    url("/Astro-Project-Lore/images/ui/lifetree-silhouette.png"),
+    url("/images/ui/lifetree-silhouette.png");
 }
 
+/* -----------------------
+   HTML canvas
+----------------------- */
 html {
-  scroll-behavior: smooth;
+  background: var(--bg-silver);
+  min-height: 100%;
 }
 
+/* -----------------------
+   Life Tree Watermark
+----------------------- */
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background-image: var(--lifetree-url);
+  background-repeat: no-repeat;
+  background-position: center var(--tree-pos-y);
+  background-size: var(--tree-size);
+
+  opacity: var(--tree-opacity);
+  filter: grayscale(1) contrast(0.95);
+
+  pointer-events: none;
+  z-index: -1; /* ← penting: SELALU di bawah */
+}
+
+/* -----------------------
+   BODY – layout utama
+----------------------- */
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue",
-    Arial, sans-serif;
-  color: #111;
-  background: #fafafa;
+
+  background: transparent !important; /* JANGAN solid */
+  color: var(--text-main);
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  z-index: 0;
+
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height: 1.6;
 }
 
-/* ===== Layout umum ===== */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 20px 56px;
-}
-
-/* ===== Header / Nav ===== */
+/* -----------------------
+   HEADER
+----------------------- */
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: #fff;
-  border-bottom: 1px solid #eaeaea;
+
+  background: rgba(238, 241, 244, 0.85);
+  backdrop-filter: blur(6px);
+
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  z-index: 10;
 }
 
-.nav {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  padding: 14px 16px;
+/* -----------------------
+   MAIN CONTENT
+----------------------- */
+main {
+  flex: 1;
+
+  max-width: 920px;
+  margin: 32px auto;
+  padding: 28px 20px;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(2px);
+  border-radius: 18px;
 }
 
-.nav__link {
-  text-decoration: none;
-  color: #111;
-  font-weight: 500;
-  position: relative;
-}
+/* -----------------------
+   FOOTER
+----------------------- */
+footer {
+  margin-top: auto;
+  padding: 20px 16px 28px;
 
-.nav__link:hover {
-  opacity: 0.7;
-}
-
-.nav__link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 100%;
-  height: 2px;
-  background: #111;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.2s ease;
-}
-
-.nav__link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* ===== Footer ===== */
-.footer {
-  border-top: 1px solid #eaeaea;
-  margin-top: 56px;
-  padding-top: 20px;
   text-align: center;
   font-size: 14px;
   opacity: 0.7;
+
+  background: transparent;
+  border-top: none;
 }
 
-/* Quote tepat di bawah judul (dalam konten markdown) */
-.page-title + .prose blockquote,
-.prose > blockquote:first-child {
-  font-size: 1.6rem;
-  font-style: italic;
+/* -----------------------
+   LINKS & TEXT
+----------------------- */
+a {
+  color: #3b5bdb;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 44px;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+
+h2 {
+  font-size: 28px;
+  margin: 22px 0 10px;
+}
+
+p {
+  margin: 0 0 14px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+li {
+  margin: 6px 0;
+}
+
+/* -----------------------
+   CLEANUP (anti white box)
+----------------------- */
+.container,
+article,
+.prose {
+  background: transparent !important;
+}
+
+hr {
+  display: none !important;
+}
+
+/* =========================
+   Codex Quote / Blockquote
+   ========================= */
+
+.prose blockquote,
+article blockquote {
+  margin: 1.8rem 0 2.4rem;
+  padding-left: 1.4rem;
+
+  font-size: 1.55rem;
+  font-style: italic;        /* 👈 italic full */
   font-weight: 600;
   line-height: 1.7;
 
-  margin: 1rem 0 2rem;
-  padding-left: 1.25rem;
-
-  border-left: 4px solid #aaa;
   color: #222;
+
+  border-left: 4px solid rgba(0,0,0,0.25);
+  position: relative;
 }
 
-/* rapihin paragraf dalam blockquote */
-.prose blockquote p {
+/* Rapihin isi */
+.prose blockquote p,
+article blockquote p {
   margin: 0;
 }
 
-/* === Codex Lore Styling === */
-
-.lore-page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.lore-page .intro {
-  font-style: italic;
-  opacity: 0.8;
-  margin-bottom: 2rem;
-}
-
-
-.right-float-img {
-  float: right;
-  margin: 0 0 1rem 1rem; /* jarak teks */
-  max-width: 360px;
-}
-
-.right-float-img img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-}
-
-@media (max-width: 768px) {
-  .right-float-img {
-    float: none;
-    max-width: 100%;
-    margin: 0 0 1rem 0;
-  }
-}
-
-.lore-split {
-  position: relative;
-  display: block;
-}
-
-/* kolom teks: kasih ruang kanan sebesar lebar gambar + gap */
-.lore-text {
-  padding-right: 460px; /* 420 (gambar) + 40 (gap) */
-}
-
-/* gambar nempel kanan, tidak ngedorong layout */
-.lore-image {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 420px;
-}
-
-/* gambar + border/box */
-.lore-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-/* Supaya kontainer punya tinggi (karena gambar absolute) */
-.lore-split::after {
-  content: "";
-  display: block;
-  clear: both;
-  padding-bottom: 12px;
-}
-
-/* Mobile: balik normal */
-@media (max-width: 900px) {
-  .lore-text {
-    padding-right: 0;
-  }
-  .lore-image {
-    position: static;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-}
