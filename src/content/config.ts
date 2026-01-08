@@ -29,7 +29,7 @@ const books = defineCollection({
     title: z.string(),
     summary: z.string(),
     author: z.string().optional(),
-    category: z.enum(["History", "Bestiary", "Botany", "Magic", "Religion", "Politics", "Fiction", "Compendium", "item", "Other"]).optional(),
+    category: z.enum(["History", "Bestiary", "Botany", "Magic", "Religion", "Politics", "Fiction", "Compendium", "Item", "Other"]).optional(),
     era: z.string().optional(),
     region: z.string().optional(),
     tags: z.array(z.string()).optional(),
