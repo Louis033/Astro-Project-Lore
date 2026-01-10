@@ -1,5 +1,5 @@
 ---
-title: Religia
+title: Kingdom of Religia
 summary: A Monarch Kingdom ruled by the almight god, Austin Godpower
 region: Centre of the World
 tags: ["Districts", "Kingdom", "God", "monarch"]
