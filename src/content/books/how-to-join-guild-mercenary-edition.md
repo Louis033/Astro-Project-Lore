@@ -8,5 +8,5 @@ tags: ["Guide", "Mercenary Guild", "Aesleth"]
 ---
 
 ## What is Mercenary Guild?
-Mercenary Guild is a guild for a place that the contractor and mercenary meet. 
+Mercenary Guild is a 
 

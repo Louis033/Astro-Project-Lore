@@ -8,7 +8,7 @@ tags: ["Weapon", "Legendary", "Omniframe"]
 ---
 
 
-Omniframe is a unique weapon belong to a legendary mercenary, Physcx. It’s a Magniton based weapon and it’s consist of many weapon frame so it could construct or decontruct to make a weapon of many kind. 
+Omniframe is a unique weapon currently belong to a legendary mercenary, Physcx. It’s a Magniton based weapon and it’s consist of many weapon frame so it could construct or decontruct to make a weapon of many kind. 
 
 The magniton nature being magnetic is a great advantage of Omni-frame as it could be triggered to construct a weapon type assisted by an AI powered system to automatically form on its own made by Physcx himself. 
 
